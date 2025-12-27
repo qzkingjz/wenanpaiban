@@ -1,0 +1,8 @@
+{
+  "name": "GQ 风尚场 (GQ Aesthetic Studio)",
+  "description": "一个将原始文本转化为高格调 GQ 杂志风格页面的设计工具。利用 Gemini 3 Pro 进行版面设计与文字精炼，并调用 Gemini 2.5 Flash Image 生成匹配的视觉艺术大片。",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
