@@ -1,8 +1,8 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { generateGQLayout, generateGQImage } from './services/geminiService';
 import { AppState } from './types';
-import { Sparkles, Loader2, Send, ChevronLeft, Download } from 'lucide-react';
+import { Loader2, Send, ChevronLeft, Download, Sparkles } from 'lucide-react';
 
 const App: React.FC = () => {
   const [inputText, setInputText] = useState('');
@@ -26,9 +26,10 @@ const App: React.FC = () => {
       background-color: #000; 
       color: #fff; 
       font-family: 'Inter', -apple-system, sans-serif; 
-      min-height: 100%;
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
     }
-    /* 容器不再居中，而是从顶部开始，确保长文章正常滚动 */
     .gq-article-content { 
       width: 100%; 
       max-width: 760px; 
@@ -39,7 +40,7 @@ const App: React.FC = () => {
     }
     h1 { 
       font-family: 'Noto Serif SC', serif; 
-      font-size: clamp(40px, 8vw, 72px); 
+      font-size: clamp(34px, 8vw, 72px); 
       line-height: 1.1; 
       font-weight: 700; 
       text-transform: uppercase; 
@@ -49,9 +50,9 @@ const App: React.FC = () => {
     }
     h2 { 
       font-family: 'Noto Serif SC', serif; 
-      font-size: 22px; 
+      font-size: 20px; 
       margin: 60px 0 25px; 
-      border-top: 1px solid #222; 
+      border-top: 1px solid #333; 
       padding-top: 25px; 
       text-transform: uppercase; 
       letter-spacing: 0.15em; 
@@ -59,7 +60,7 @@ const App: React.FC = () => {
     }
     p { 
       font-size: 17px; 
-      line-height: 1.85; 
+      line-height: 1.9; 
       margin-bottom: 28px; 
       color: #ccc; 
       font-weight: 300; 
@@ -67,13 +68,13 @@ const App: React.FC = () => {
     }
     blockquote { 
       font-family: 'Noto Serif SC', serif; 
-      font-size: 26px; 
+      font-size: 24px; 
       font-style: italic; 
       margin: 60px 0; 
       padding: 30px 40px; 
       background: #080808; 
       border-left: 2px solid #fff; 
-      line-height: 1.5; 
+      line-height: 1.6; 
       color: #fff; 
     }
     .gq-visual-frame { 
@@ -86,9 +87,7 @@ const App: React.FC = () => {
       height: auto; 
       display: block; 
       filter: contrast(1.05) brightness(0.9);
-      transition: filter 0.5s ease;
     }
-    .gq-visual-frame:hover img { filter: contrast(1.1) brightness(1); }
     .gq-caption { 
       font-size: 9px; 
       text-transform: uppercase; 
@@ -96,11 +95,10 @@ const App: React.FC = () => {
       color: #444; 
       margin-top: 12px; 
       text-align: right; 
-      font-family: sans-serif;
     }
     @media (max-width: 640px) { 
-      .gq-article-content { padding: 40px 24px 80px; } 
-      h1 { font-size: 38px; } 
+      .gq-article-content { padding: 40px 20px 80px; } 
+      h1 { font-size: 32px; } 
     }
   </style>
 </head>
@@ -172,9 +170,9 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="h-screen bg-[#050505] text-white flex flex-col font-sans overflow-hidden">
+    <div className="flex flex-col h-screen w-screen bg-[#050505] text-white font-sans overflow-hidden">
       {/* Editorial Header */}
-      <header className="border-b border-white/5 px-8 py-5 flex justify-between items-center bg-[#050505] shrink-0">
+      <header className="border-b border-white/5 px-8 py-5 flex justify-between items-center bg-[#050505] shrink-0 z-10">
         <div className="flex items-center gap-4">
           <div className="bg-white text-black font-black text-sm px-3 py-1 tracking-tighter italic">GQ</div>
           <div className="h-4 w-[1px] bg-white/20"></div>
@@ -187,9 +185,9 @@ const App: React.FC = () => {
         )}
       </header>
 
-      <main className="flex-1 relative flex flex-col min-h-0">
+      <main className="flex-1 relative min-h-0 w-full overflow-hidden">
         {appState === AppState.IDLE && (
-          <div className="max-w-4xl mx-auto w-full px-8 py-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
+          <div className="max-w-4xl mx-auto w-full h-full overflow-y-auto px-8 py-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
             <div className="mb-10">
               <h2 className="text-6xl font-serif font-bold tracking-tighter leading-none mb-4">内容入场<br/><span className="text-white/20">格调自成</span></h2>
               <p className="text-white/30 font-light max-w-md leading-relaxed text-sm">
@@ -207,7 +205,7 @@ const App: React.FC = () => {
               <button
                 onClick={handleGenerate}
                 disabled={!inputText.trim()}
-                className="w-full bg-white text-black py-4 font-black tracking-[0.3em] uppercase text-xs hover:bg-neutral-200 transition-all disabled:opacity-10"
+                className="w-full bg-white text-black py-4 font-black tracking-[0.3em] uppercase text-xs hover:bg-neutral-200 transition-all disabled:opacity-10 shadow-lg"
               >
                 启动渲染程序
               </button>
@@ -216,7 +214,7 @@ const App: React.FC = () => {
         )}
 
         {(appState === AppState.GENERATING_TEXT || appState === AppState.GENERATING_IMAGES) && (
-          <div className="flex-1 flex flex-col items-center justify-center gap-8">
+          <div className="w-full h-full flex flex-col items-center justify-center gap-8 bg-[#050505]">
             <div className="relative">
               <Loader2 className="animate-spin text-white/10" size={56} />
               <div className="absolute inset-0 flex items-center justify-center">
@@ -231,18 +229,18 @@ const App: React.FC = () => {
         )}
 
         {appState === AppState.COMPLETED && (
-          <div className="flex-1 flex flex-col overflow-hidden animate-in fade-in duration-1000">
-            <div className="flex-1 relative bg-black min-h-0">
+          <div className="w-full h-full flex flex-col overflow-hidden animate-in fade-in duration-1000">
+            <div className="flex-1 relative bg-black min-h-0 w-full">
               <iframe 
                 title="GQ Preview"
-                className="absolute inset-0 w-full h-full border-none"
+                className="absolute top-0 left-0 w-full h-full border-none block"
                 srcDoc={constructFullPage(generatedHtml)}
               />
             </div>
             <div className="p-6 bg-[#050505] border-t border-white/5 flex justify-center shrink-0">
               <button 
                 onClick={downloadFile}
-                className="flex items-center gap-3 px-12 py-4 bg-white text-black text-[10px] font-bold tracking-[0.4em] uppercase hover:scale-105 transition-all shadow-2xl"
+                className="flex items-center gap-3 px-12 py-4 bg-white text-black text-[10px] font-bold tracking-[0.4em] uppercase hover:scale-105 active:scale-95 transition-all shadow-2xl"
               >
                 下载成品页面 <Download size={14}/>
               </button>
@@ -251,15 +249,15 @@ const App: React.FC = () => {
         )}
 
         {appState === AppState.ERROR && (
-           <div className="flex-1 flex flex-col items-center justify-center gap-4">
+           <div className="w-full h-full flex flex-col items-center justify-center gap-4 bg-[#050505]">
              <p className="text-neutral-500 font-serif">渲染异常</p>
-             <button onClick={reset} className="text-[10px] tracking-widest uppercase underline">重试</button>
+             <button onClick={reset} className="text-[10px] tracking-widest uppercase underline opacity-50 hover:opacity-100 transition-all">重试</button>
            </div>
         )}
       </main>
 
-      <footer className="p-5 flex justify-between items-center bg-black border-t border-white/5 shrink-0">
-        <div className="text-[8px] tracking-[0.5em] font-bold uppercase opacity-10">GQ Aesthetic Studio // v1.0.2</div>
+      <footer className="p-5 flex justify-between items-center bg-black border-t border-white/5 shrink-0 z-10">
+        <div className="text-[8px] tracking-[0.5em] font-bold uppercase opacity-10">GQ Aesthetic Studio // v1.0.4</div>
         <div className="text-[8px] tracking-[0.5em] font-bold uppercase opacity-10">Design as Order</div>
       </footer>
     </div>
